@@ -248,7 +248,7 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({ nextChar, sett
   }
 
   return (
-    <div className={`flex flex-col items-center gap-3 p-4 rounded-2xl border ${theme.border} ${theme.panelBg} transition-colors duration-200 select-none shadow-xl`}>
+    <div className={`hidden md:flex flex-col items-center gap-3 p-4 rounded-2xl border ${theme.border} ${theme.panelBg} transition-colors duration-200 select-none shadow-xl`}>
       {/* Keyboard Grid */}
       <div className="flex flex-col gap-1.5 sm:gap-2 w-full items-center overflow-x-auto py-1">
         {KEYBOARD_ROWS.map((row, rIdx) => (

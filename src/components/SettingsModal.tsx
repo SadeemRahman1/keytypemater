@@ -197,7 +197,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
-                <span>Show On-Screen Keyboard</span>
+                <div className="flex flex-col">
+                  <span>Show On-Screen Keyboard</span>
+                  <span className="text-[10px] text-slate-500 font-sans">Hidden on mobile screens</span>
+                </div>
                 <input
                   type="checkbox"
                   checked={settings.showKeyboard}

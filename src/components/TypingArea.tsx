@@ -419,33 +419,33 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       : 'w-0.5 h-7 bg-sky-400 animate-pulse';
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-4xl mx-auto select-none">
+    <div className="flex flex-col gap-4 sm:gap-6 w-full max-w-4xl mx-auto select-none">
       {/* Real-time Header Metrics Bar */}
       {!settings.blindMode && (
-        <div className="flex items-center justify-between px-6 py-3 rounded-xl border border-slate-800/80 bg-slate-900/40 backdrop-blur text-sm">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-sky-400" />
+        <div className="flex flex-wrap items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3 rounded-xl border border-slate-800/80 bg-slate-900/40 backdrop-blur text-xs sm:text-sm gap-2 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-6 flex-wrap">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />
               <span className="text-slate-400">WPM:</span>
-              <span className="font-bold font-mono text-lg text-slate-100">{liveWpm}</span>
+              <span className="font-bold font-mono text-base sm:text-lg text-slate-100">{liveWpm}</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Target className="w-4 h-4 text-emerald-400" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
               <span className="text-slate-400">Acc:</span>
-              <span className="font-bold font-mono text-lg text-slate-100">{liveAccuracy}%</span>
+              <span className="font-bold font-mono text-base sm:text-lg text-slate-100">{liveAccuracy}%</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-400" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400" />
               <span className="text-slate-400">Errors:</span>
-              <span className="font-bold font-mono text-lg text-rose-400">{errorsCount}</span>
+              <span className="font-bold font-mono text-base sm:text-lg text-rose-400">{errorsCount}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-slate-400">
-            <Clock className="w-4 h-4 text-amber-400" />
-            <span className="font-bold font-mono text-lg text-amber-300">
+          <div className="flex items-center gap-1.5 sm:gap-2 text-slate-400 ml-auto sm:ml-0">
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+            <span className="font-bold font-mono text-base sm:text-lg text-amber-300">
               {timeLimit ? `${Math.max(0, timeLimit - elapsedSeconds)}s` : `${elapsedSeconds}s`}
             </span>
           </div>
@@ -454,7 +454,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
 
       {/* Main Interactive Typing Canvas Box (5-Line Window View) */}
       <div
-        className={`relative p-6 sm:p-8 rounded-2xl border ${theme.border} ${theme.panelBg} flex flex-col justify-center cursor-text transition-all duration-200 shadow-xl overflow-hidden`}
+        className={`relative p-4 sm:p-8 rounded-2xl border ${theme.border} ${theme.panelBg} flex flex-col justify-center cursor-text transition-all duration-200 shadow-xl overflow-hidden`}
         onClick={() => hiddenInputRef.current?.focus()}
       >
         {/* Subtle Gradient Fade Overlays for Top and Bottom Lines */}
@@ -479,7 +479,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
         {/* Text Display Canvas (Fixed ~5 lines height window with smooth auto-scroll) */}
         <div
           ref={textContainerRef}
-          className={`h-[150px] sm:h-[180px] overflow-y-auto text-xl sm:text-2xl leading-relaxed tracking-wide ${fontClass} break-words whitespace-pre-wrap transition-all py-1 scrollbar-none`}
+          className={`h-[130px] sm:h-[180px] overflow-y-auto text-lg sm:text-2xl leading-relaxed tracking-wide ${fontClass} break-words whitespace-pre-wrap transition-all py-1 scrollbar-none`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {textToType.split('').map((char, index) => {
@@ -511,8 +511,8 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       </div>
 
       {/* Control Actions & Hotkey Bar */}
-      <div className="flex items-center justify-between text-xs text-slate-500 px-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 px-2">
+        <div className="hidden sm:flex items-center gap-2">
           <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono text-[11px]">Tab</span>
           <span>skip word</span>
           <span>•</span>
@@ -522,7 +522,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
 
         <button
           onClick={onRestart}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-medium cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-medium cursor-pointer ml-auto sm:ml-0"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Restart Test</span>
