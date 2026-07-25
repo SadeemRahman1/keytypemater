@@ -50,6 +50,25 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   const activeCharRef = useRef<HTMLSpanElement>(null);
   const timerRef = useRef<any>(null);
 
+  // Refs to maintain latest state for uninterrupted interval timer execution
+  const typedRef = useRef<string>('');
+  typedRef.current = typed;
+
+  const errorsCountRef = useRef<number>(0);
+  errorsCountRef.current = errorsCount;
+
+  const textToTypeRef = useRef<string>(textToType);
+  textToTypeRef.current = textToType;
+
+  const timeLimitRef = useRef<number | undefined>(timeLimit);
+  timeLimitRef.current = timeLimit;
+
+  const isCompletedRef = useRef<boolean>(false);
+  isCompletedRef.current = isCompleted;
+
+  const wpmHistoryRef = useRef<Array<{ time: number; wpm: number; rawWpm: number; errors: number }>>([]);
+  wpmHistoryRef.current = wpmHistory;
+
   // Auto-scroll 5-line window as user types
   useEffect(() => {
     if (activeCharRef.current && textContainerRef.current) {
@@ -83,6 +102,10 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     setIsCompleted(false);
     setErrorsCount(0);
     setWpmHistory([]);
+    typedRef.current = '';
+    errorsCountRef.current = 0;
+    isCompletedRef.current = false;
+    wpmHistoryRef.current = [];
     lastKeyTimeRef.current = null;
     charStatsRef.current = [];
     if (timerRef.current) clearInterval(timerRef.current);
@@ -167,51 +190,18 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [typed, textToType, startTime, isCompleted, mode, settings, onRestart, onNextCharChange]);
 
-  // Timer interval
-  useEffect(() => {
-    if (startTime && !isCompleted) {
-      timerRef.current = setInterval(() => {
-        const now = Date.now();
-        const seconds = Math.max(1, Math.floor((now - startTime) / 1000));
-        setElapsedSeconds(seconds);
-
-        // Calculate current WPM snapshot for history chart
-        const totalTyped = typed.length;
-        let correctCount = 0;
-        for (let i = 0; i < totalTyped; i++) {
-          if (typed[i] === textToType[i]) correctCount++;
-        }
-
-        const currWpm = Math.round((correctCount / 5) / (seconds / 60));
-        const currRawWpm = Math.round((totalTyped / 5) / (seconds / 60));
-
-        setWpmHistory((prev) => [
-          ...prev,
-          { time: seconds, wpm: currWpm || 0, rawWpm: currRawWpm || 0, errors: errorsCount },
-        ]);
-
-        // Check time limit mode end condition
-        if (timeLimit && seconds >= timeLimit) {
-          finishTest(typed, seconds);
-        }
-      }, 1000);
-    }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [startTime, isCompleted, timeLimit, typed, errorsCount, textToType]);
-
   const finishTest = (finalTyped: string, finalSeconds: number) => {
-    if (isCompleted) return;
+    if (isCompletedRef.current) return;
     setIsCompleted(true);
+    isCompletedRef.current = true;
     if (timerRef.current) clearInterval(timerRef.current);
 
     soundEngine.playCompletionChime(settings.soundVolume);
 
     let correctChars = 0;
+    const currentTextToType = textToTypeRef.current;
     for (let i = 0; i < finalTyped.length; i++) {
-      if (finalTyped[i] === textToType[i]) correctChars++;
+      if (finalTyped[i] === currentTextToType[i]) correctChars++;
     }
 
     const durationMin = Math.max(0.1, finalSeconds / 60);
@@ -219,6 +209,10 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     const rawWpm = Math.round((finalTyped.length / 5) / durationMin);
     const accuracy = finalTyped.length > 0 ? Math.round((correctChars / finalTyped.length) * 100) : 100;
     const cpm = Math.round(correctChars / durationMin);
+
+    const historySnapshots = wpmHistoryRef.current.length > 0
+      ? wpmHistoryRef.current
+      : [{ time: finalSeconds, wpm, rawWpm, errors: errorsCountRef.current }];
 
     const result: TestResult = {
       id: String(Date.now()),
@@ -230,13 +224,60 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       accuracy,
       cpm,
       timeSeconds: finalSeconds,
-      errors: errorsCount,
+      errors: errorsCountRef.current,
       totalChars: finalTyped.length,
-      wpmHistory: wpmHistory.length > 0 ? wpmHistory : [{ time: finalSeconds, wpm, rawWpm, errors: errorsCount }],
+      wpmHistory: historySnapshots,
     };
 
     onTestComplete(result, charStatsRef.current);
   };
+
+  const finishTestRef = useRef(finishTest);
+  finishTestRef.current = finishTest;
+
+  // Timer interval - stays continuously active without resetting on keystrokes
+  useEffect(() => {
+    if (startTime && !isCompleted) {
+      timerRef.current = setInterval(() => {
+        const now = Date.now();
+        const seconds = Math.max(1, Math.floor((now - startTime) / 1000));
+        setElapsedSeconds(seconds);
+
+        // Calculate current WPM snapshot for history chart using latest refs
+        const currentTyped = typedRef.current;
+        const currentTextToType = textToTypeRef.current;
+        const currentErrorsCount = errorsCountRef.current;
+        const currentTimeLimit = timeLimitRef.current;
+
+        const totalTyped = currentTyped.length;
+        let correctCount = 0;
+        for (let i = 0; i < totalTyped; i++) {
+          if (currentTyped[i] === currentTextToType[i]) correctCount++;
+        }
+
+        const currWpm = Math.round((correctCount / 5) / (seconds / 60));
+        const currRawWpm = Math.round((totalTyped / 5) / (seconds / 60));
+
+        const snapshot = {
+          time: seconds,
+          wpm: currWpm || 0,
+          rawWpm: currRawWpm || 0,
+          errors: currentErrorsCount,
+        };
+
+        setWpmHistory((prev) => [...prev, snapshot]);
+
+        // Check time limit mode end condition
+        if (currentTimeLimit && seconds >= currentTimeLimit) {
+          finishTestRef.current(currentTyped, seconds);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [startTime, isCompleted]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isCompleted) return;
