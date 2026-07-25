@@ -1,7 +1,7 @@
 export type TestMode = 'keybr' | 'words' | 'time' | 'quote' | 'aidrill' | 'custom';
 
 export type WordCountOption = 10 | 25 | 50 | 100;
-export type TimeLimitOption = 15 | 30 | 60 | 120;
+export type TimeLimitOption = 30 | 60 | 120 | 300 | 600;
 export type QuoteCategory = 'all' | 'short' | 'medium' | 'code' | 'tech' | 'literature';
 
 export type ThemeId = 'slate' | 'cyberpunk' | 'paper' | 'nordic' | 'emerald' | 'sunset';

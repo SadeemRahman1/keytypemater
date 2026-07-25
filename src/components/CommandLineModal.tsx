@@ -46,7 +46,11 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
     // Modes
     { id: 'mode-keybr', category: 'mode', title: 'Mode: Keybr Mechanics', subtitle: 'Procedural key unlocking', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onSetMode('keybr'); onClose(); } },
     { id: 'mode-words', category: 'mode', title: 'Mode: Word Count', subtitle: 'Type fixed word sets', icon: <Command className="w-4 h-4 text-sky-400" />, action: () => { onSetMode('words'); onClose(); } },
-    { id: 'mode-time', category: 'mode', title: 'Mode: Timed Test', subtitle: 'Type against countdown timer', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
+    { id: 'mode-time-30', category: 'mode', title: 'Timed Test: 30 Seconds', subtitle: 'Short 30s speed test', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
+    { id: 'mode-time-60', category: 'mode', title: 'Timed Test: 1 Minute (60s)', subtitle: 'Standard 1 minute test', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
+    { id: 'mode-time-120', category: 'mode', title: 'Timed Test: 2 Minutes (120s)', subtitle: '2 minute speed test', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
+    { id: 'mode-time-300', category: 'mode', title: 'Timed Test: 5 Minutes (300s)', subtitle: '5 minute stamina test', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
+    { id: 'mode-time-600', category: 'mode', title: 'Timed Test: 10 Minutes (600s)', subtitle: 'Long 10 minute endurance test', icon: <Command className="w-4 h-4 text-emerald-400" />, action: () => { onSetMode('time'); onClose(); } },
     { id: 'mode-quote', category: 'mode', title: 'Mode: Famous Quotes', subtitle: 'Practice typing quotes', icon: <Command className="w-4 h-4 text-purple-400" />, action: () => { onSetMode('quote'); onClose(); } },
 
     // Themes

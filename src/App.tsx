@@ -113,10 +113,12 @@ export default function App() {
           break;
         }
         case 'time': {
-          // Generate longer paragraph for timed mode (~300 words for smooth multi-line scrolling)
-          const text = generateRandomWords(300, includeNumbers, includePunctuation);
+          // Dynamically scale word pool so longer tests (3m, 5m, 10m, custom) never run out of words
+          const wordsToGenerate = Math.max(300, Math.ceil((timeLimit / 60) * 160));
+          const text = generateRandomWords(wordsToGenerate, includeNumbers, includePunctuation);
           setCurrentText(text);
-          setModeDetail(`${timeLimit}s Timed`);
+          const formattedLabel = timeLimit >= 60 && timeLimit % 60 === 0 ? `${timeLimit / 60}m` : `${timeLimit}s`;
+          setModeDetail(`${formattedLabel} Timed`);
           break;
         }
         case 'quote': {

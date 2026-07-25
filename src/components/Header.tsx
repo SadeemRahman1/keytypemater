@@ -54,6 +54,15 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const theme = THEMES[settings.theme];
 
+  const timeOptions: TimeLimitOption[] = [30, 60, 120, 300, 600];
+
+  const getTimeDisplayLabel = (seconds: number) => {
+    if (seconds >= 60 && seconds % 60 === 0) {
+      return `${seconds / 60}m`;
+    }
+    return `${seconds}s`;
+  };
+
   return (
     <header className="flex flex-col gap-4 w-full max-w-4xl mx-auto pt-4 select-none">
       {/* Top Navbar */}
@@ -209,15 +218,15 @@ export const Header: React.FC<HeaderProps> = ({
 
           {mode === 'time' && (
             <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
-              {([15, 30, 60, 120] as TimeLimitOption[]).map((time) => (
+              {timeOptions.map((time) => (
                 <button
                   key={time}
                   onClick={() => onChangeTimeLimit(time)}
                   className={`px-2 py-1 rounded-lg text-[11px] transition-colors cursor-pointer ${
-                    timeLimit === time ? 'bg-slate-800 text-amber-400 font-bold' : 'hover:text-slate-200'
+                    timeLimit === time ? 'bg-slate-800 text-amber-400 font-bold shadow-sm' : 'hover:text-slate-200'
                   }`}
                 >
-                  {time}s
+                  {getTimeDisplayLabel(time)}
                 </button>
               ))}
             </div>
