@@ -1,0 +1,6 @@
+{
+  "name": "KeyType Master",
+  "description": "Touch typing mastery platform featuring key confidence mechanics, real-time visual keyboard, performance analytics, and AI-powered custom practice drills.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
