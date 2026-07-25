@@ -9,6 +9,7 @@ import { AchievementsModal } from './components/AchievementsModal';
 import { HistoryDashboard } from './components/HistoryDashboard';
 import { LegalPagesModal, LegalTab } from './components/LegalPagesModal';
 import { CommandLineModal } from './components/CommandLineModal';
+import { KeybrProgressWidget } from './components/KeybrProgressWidget';
 
 import {
   TestMode,
@@ -148,7 +149,8 @@ export default function App() {
     // 2. Update key mechanics & keybr progression
     const { updatedStats, newlyUnlockedLetters } = updateKeyStatsFromSession(
       charStats,
-      settings.keybrUnlockedLetters
+      settings.keybrUnlockedLetters,
+      settings.keybrTargetWpm || 35
     );
     setKeyStats(updatedStats);
 
@@ -184,6 +186,17 @@ export default function App() {
   const handleSaveSettings = (newSettings: UserSettings) => {
     setSettings(newSettings);
     saveSettings(newSettings);
+  };
+
+  const handleUpdateUnlockedLetters = (newUnlocked: string[]) => {
+    const updated = { ...settings, keybrUnlockedLetters: newUnlocked };
+    setSettings(updated);
+    saveSettings(updated);
+    if (mode === 'keybr') {
+      const text = generateKeybrWords(newUnlocked, 25);
+      setCurrentText(text);
+      setModeDetail(`Keybr (${newUnlocked.join(', ').toUpperCase()})`);
+    }
   };
 
   const handleClearHistory = () => {
@@ -237,6 +250,15 @@ export default function App() {
           />
         ) : (
           <>
+            {mode === 'keybr' && settings.showKeybrProgressWidget && (
+              <KeybrProgressWidget
+                settings={settings}
+                keyStats={keyStats}
+                onUpdateUnlockedLetters={handleUpdateUnlockedLetters}
+                onOpenSettings={() => setIsSettingsOpen(true)}
+              />
+            )}
+
             <TypingArea
               textToType={currentText}
               mode={mode}

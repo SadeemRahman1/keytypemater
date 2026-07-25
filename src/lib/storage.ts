@@ -29,6 +29,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   strictSpace: false,
   liveStats: true,
   language: 'english',
+  showKeybrProgressWidget: false,
+  keybrTargetWpm: 35,
 };
 
 export const INITIAL_ACHIEVEMENTS: Achievement[] = [
@@ -111,7 +113,8 @@ export function loadKeyStats(): Record<string, KeyStat> {
 
 export function updateKeyStatsFromSession(
   charStats: Array<{ char: string; timeMs: number; err: boolean }>,
-  currentUnlocked: string[]
+  currentUnlocked: string[],
+  targetWpm: number = 35
 ): { updatedStats: Record<string, KeyStat>; newlyUnlockedLetters: string[] } {
   const stats = loadKeyStats();
   const unlockedSet = new Set(currentUnlocked);
@@ -150,14 +153,18 @@ export function updateKeyStatsFromSession(
     }
   });
 
-  // Check keybr progression unlock logic
+  // Check keybr progression unlock logic based on targetWpm speed threshold (official Keybr algorithm)
   const newlyUnlockedLetters: string[] = [];
   KEYBR_LETTER_ORDER.forEach((key) => {
     if (!unlockedSet.has(key)) {
-      // Check if all previously unlocked letters have > 75 confidence and >= 30 keystrokes
+      // Check if all previously unlocked letters meet the target WPM speed threshold and accuracy
       const allPrevMastered = Array.from(unlockedSet).every((prevKey) => {
         const pStat = stats[prevKey];
-        return pStat && pStat.totalTyped >= 20 && pStat.confidence >= 70;
+        if (!pStat || pStat.totalTyped < 20) return false;
+        const avgLatencyMs = pStat.totalLatencyMs / pStat.totalTyped;
+        const keyWpm = avgLatencyMs > 0 ? (60000 / avgLatencyMs) / 5 : 0;
+        const accuracy = Math.max(0, (pStat.totalTyped - pStat.errors) / pStat.totalTyped);
+        return keyWpm >= targetWpm && accuracy >= 0.88;
       });
 
       if (allPrevMastered && unlockedSet.size < KEYBR_LETTER_ORDER.length) {

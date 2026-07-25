@@ -71,6 +71,9 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
 
     { id: 'toggle-blind', category: 'setting', title: `Blind Mode: ${settings.blindMode ? 'OFF' : 'ON'}`, subtitle: 'Hide speed & error highlights', icon: <Eye className="w-4 h-4 text-purple-400" />, action: () => { onUpdateSettings({ ...settings, blindMode: !settings.blindMode }); onClose(); } },
     { id: 'toggle-stats', category: 'setting', title: `Live WPM Stats: ${settings.liveStats ? 'OFF' : 'ON'}`, subtitle: 'Toggle real-time WPM header bar', icon: <Eye className="w-4 h-4 text-sky-400" />, action: () => { onUpdateSettings({ ...settings, liveStats: !settings.liveStats }); onClose(); } },
+    { id: 'toggle-keybr-banner', category: 'setting', title: `Keybr Progress Banner: ${settings.showKeybrProgressWidget ? 'HIDE' : 'SHOW'}`, subtitle: 'Toggle procedural progress bar on main screen', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onUpdateSettings({ ...settings, showKeybrProgressWidget: !settings.showKeybrProgressWidget }); onClose(); } },
+    { id: 'keybr-target-35', category: 'setting', title: 'Keybr Target Speed: 35 WPM (Default)', subtitle: 'Unlock next letter above 35 WPM', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onUpdateSettings({ ...settings, keybrTargetWpm: 35 }); onClose(); } },
+    { id: 'keybr-target-50', category: 'setting', title: 'Keybr Target Speed: 50 WPM (Fast)', subtitle: 'Unlock next letter above 50 WPM', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onUpdateSettings({ ...settings, keybrTargetWpm: 50 }); onClose(); } },
 
     // Navigations
     { id: 'nav-settings', category: 'navigation', title: 'Open All Preferences', subtitle: 'Configure all typing options', icon: <Settings className="w-4 h-4 text-slate-400" />, action: () => { onOpenSettings(); onClose(); } },

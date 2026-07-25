@@ -60,6 +60,8 @@ export interface UserSettings {
   strictSpace: boolean;
   liveStats: boolean;
   language: string;
+  showKeybrProgressWidget: boolean;
+  keybrTargetWpm: number;
 }
 
 export interface Achievement {
