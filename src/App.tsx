@@ -8,6 +8,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { AchievementsModal } from './components/AchievementsModal';
 import { HistoryDashboard } from './components/HistoryDashboard';
 import { LegalPagesModal, LegalTab } from './components/LegalPagesModal';
+import { CommandLineModal } from './components/CommandLineModal';
 
 import {
   TestMode,
@@ -70,12 +71,25 @@ export default function App() {
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [legalTab, setLegalTab] = useState<LegalTab>('about');
 
   const openLegalModal = (tab: LegalTab = 'about') => {
     setLegalTab(tab);
     setIsLegalOpen(true);
   };
+
+  // Global Monkeytype Command Line Hotkey (Ctrl+Shift+P or Esc)
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') || (e.key === 'Escape' && !isSettingsOpen && !isAchievementsOpen && !isHistoryOpen && !isLegalOpen)) {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [isSettingsOpen, isAchievementsOpen, isHistoryOpen, isLegalOpen]);
 
   // Regenerate new practice text passage based on active mode
   const prepareNewPassage = useCallback(() => {
@@ -207,6 +221,7 @@ export default function App() {
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenLegal={() => openLegalModal('about')}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
 
       {/* Main Practice Workspace */}
@@ -285,6 +300,19 @@ export default function App() {
       </footer>
 
       {/* Modals */}
+      {isCommandPaletteOpen && (
+        <CommandLineModal
+          settings={settings}
+          onUpdateSettings={handleSaveSettings}
+          onSetMode={(m) => setMode(m)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
+          onOpenAchievements={() => setIsAchievementsOpen(true)}
+          onOpenLegal={(tab) => openLegalModal(tab)}
+          onClose={() => setIsCommandPaletteOpen(false)}
+        />
+      )}
+
       {isLegalOpen && (
         <LegalPagesModal
           initialTab={legalTab}

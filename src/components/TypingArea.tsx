@@ -244,18 +244,74 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     const val = e.target.value;
     const now = Date.now();
 
+    // 1. Confidence Mode Enforcement
+    const isBackspace = val.length < typed.length;
+    if (isBackspace) {
+      if (settings.confidenceMode === 'max') {
+        // Max confidence mode: Backspace is completely disabled
+        return;
+      }
+      if (settings.confidenceMode === 'on') {
+        // Cannot backspace into previous word if space was typed
+        const lastSpaceIndexInText = textToType.lastIndexOf(' ', typed.length - 1);
+        if (val.length <= lastSpaceIndexInText && lastSpaceIndexInText !== -1) {
+          return;
+        }
+      }
+    }
+
     // Start timer on first keystroke
     if (!startTime && val.length > 0) {
       setStartTime(now);
       lastKeyTimeRef.current = now;
     }
 
-    // Play sound
-    const isBackspace = val.length < typed.length;
     const lastCharTyped = val.slice(-1);
     const expectedChar = textToType[val.length - 1];
     const isError = !isBackspace && lastCharTyped !== expectedChar;
 
+    // 2. Stop on Error Rules
+    if (isError && settings.stopOnError === 'letter') {
+      // Letter mode: Ignore incorrect keystrokes (do not append to typed)
+      soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
+      setErrorsCount((prev) => prev + 1);
+      return;
+    }
+
+    if (!isBackspace && lastCharTyped === ' ' && settings.stopOnError === 'word') {
+      // Word mode: Do not allow space to advance if current word has errors
+      const wordStartIndex = textToType.lastIndexOf(' ', val.length - 2) + 1;
+      const currentWordSlice = typed.slice(wordStartIndex);
+      const expectedWordSlice = textToType.slice(wordStartIndex, val.length - 1);
+      if (currentWordSlice !== expectedWordSlice) {
+        soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, true, true);
+        setErrorsCount((prev) => prev + 1);
+        return;
+      }
+    }
+
+    // 3. Difficulty Rules (Master / Expert)
+    if (isError && settings.difficulty === 'master') {
+      // Master difficulty: Fails test on first incorrect keypress
+      soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
+      setErrorsCount((prev) => prev + 1);
+      finishTest(typed + lastCharTyped, Math.max(1, Math.floor((now - (startTime || now)) / 1000)));
+      return;
+    }
+
+    if (!isBackspace && lastCharTyped === ' ' && settings.difficulty === 'expert') {
+      // Expert difficulty: Fails test if space submitted on an incorrect word
+      const wordStartIndex = textToType.lastIndexOf(' ', val.length - 2) + 1;
+      const currentWordSlice = typed.slice(wordStartIndex);
+      const expectedWordSlice = textToType.slice(wordStartIndex, val.length - 1);
+      if (currentWordSlice !== expectedWordSlice) {
+        soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, true, true);
+        finishTest(typed + lastCharTyped, Math.max(1, Math.floor((now - (startTime || now)) / 1000)));
+        return;
+      }
+    }
+
+    // Play sound & record latency stats
     if (!isBackspace && lastCharTyped) {
       soundEngine.playKeySound(
         settings.soundTheme,
@@ -264,7 +320,6 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
         isError
       );
 
-      // Record key latency for keybr mechanics
       const timeMs = lastKeyTimeRef.current ? now - lastKeyTimeRef.current : 150;
       lastKeyTimeRef.current = now;
 

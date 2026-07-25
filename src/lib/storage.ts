@@ -19,6 +19,16 @@ export const DEFAULT_SETTINGS: UserSettings = {
   blindMode: false,
   quickRestartHotkey: true,
   keybrUnlockedLetters: ['e', 't', 'a', 'o', 'i', 'n'], // Initial 6 home-row letters unlocked
+  difficulty: 'normal',
+  stopOnError: 'off',
+  confidenceMode: 'off',
+  minSpeed: 0,
+  minAccuracy: 0,
+  quickEnd: true,
+  freedomMode: false,
+  strictSpace: false,
+  liveStats: true,
+  language: 'english',
 };
 
 export const INITIAL_ACHIEVEMENTS: Achievement[] = [

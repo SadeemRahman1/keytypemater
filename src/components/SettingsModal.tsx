@@ -226,7 +226,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
               </label>
 
               <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
-                <span>Blind Mode (Hide Speed)</span>
+                <span>Blind Mode (Hide Speed & Errors)</span>
                 <input
                   type="checkbox"
                   checked={settings.blindMode}
@@ -234,6 +234,117 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
                   className="accent-sky-400 w-4 h-4 rounded cursor-pointer"
                 />
               </label>
+
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
+                <span>Live WPM & Accuracy Stats</span>
+                <input
+                  type="checkbox"
+                  checked={settings.liveStats}
+                  onChange={(e) => updateSetting('liveStats', e.target.checked)}
+                  className="accent-sky-400 w-4 h-4 rounded cursor-pointer"
+                />
+              </label>
+
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
+                <span>Quick End Test on Last Word</span>
+                <input
+                  type="checkbox"
+                  checked={settings.quickEnd}
+                  onChange={(e) => updateSetting('quickEnd', e.target.checked)}
+                  className="accent-sky-400 w-4 h-4 rounded cursor-pointer"
+                />
+              </label>
+
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
+                <span>Freedom Mode (Delete Any Word)</span>
+                <input
+                  type="checkbox"
+                  checked={settings.freedomMode}
+                  onChange={(e) => updateSetting('freedomMode', e.target.checked)}
+                  className="accent-sky-400 w-4 h-4 rounded cursor-pointer"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Difficulty & Failure Controls */}
+          <div className="flex flex-col gap-3 border-t border-slate-800/80 pt-4">
+            <div className="flex items-center gap-2 text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <Eye className="w-4 h-4 text-rose-400" />
+              <span>Difficulty & Strict Rules</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400">Difficulty Level:</label>
+                <select
+                  value={settings.difficulty}
+                  onChange={(e: any) => updateSetting('difficulty', e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500"
+                >
+                  <option value="normal">Normal (Classic)</option>
+                  <option value="expert">Expert (Fail on Wrong Word)</option>
+                  <option value="master">Master (Fail on Single Error)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400">Stop on Error:</label>
+                <select
+                  value={settings.stopOnError}
+                  onChange={(e: any) => updateSetting('stopOnError', e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500"
+                >
+                  <option value="off">Off (Continue)</option>
+                  <option value="letter">Letter Mode (Stop Input)</option>
+                  <option value="word">Word Mode (Fix Errors First)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400">Confidence Mode:</label>
+                <select
+                  value={settings.confidenceMode}
+                  onChange={(e: any) => updateSetting('confidenceMode', e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500"
+                >
+                  <option value="off">Off (Normal Backspace)</option>
+                  <option value="on">On (No Prev Word Backspace)</option>
+                  <option value="max">Max (Disable Backspace)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400">Minimum WPM Threshold:</label>
+                <select
+                  value={settings.minSpeed}
+                  onChange={(e) => updateSetting('minSpeed', parseInt(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500"
+                >
+                  <option value={0}>Disabled</option>
+                  <option value={30}>30 WPM</option>
+                  <option value={50}>50 WPM</option>
+                  <option value={80}>80 WPM</option>
+                  <option value={100}>100 WPM</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400">Minimum Accuracy Threshold:</label>
+                <select
+                  value={settings.minAccuracy}
+                  onChange={(e) => updateSetting('minAccuracy', parseInt(e.target.value))}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500"
+                >
+                  <option value={0}>Disabled</option>
+                  <option value={80}>80% Accuracy</option>
+                  <option value={90}>90% Accuracy</option>
+                  <option value={95}>95% Accuracy</option>
+                  <option value={98}>98% Accuracy</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

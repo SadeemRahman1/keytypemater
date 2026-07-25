@@ -33,6 +33,10 @@ export interface TestResult {
   wpmHistory: Array<{ time: number; wpm: number; rawWpm: number; errors: number }>;
 }
 
+export type DifficultyMode = 'normal' | 'expert' | 'master';
+export type StopOnErrorMode = 'off' | 'letter' | 'word';
+export type ConfidenceMode = 'off' | 'on' | 'max';
+
 export interface UserSettings {
   theme: ThemeId;
   soundTheme: AudioTheme;
@@ -46,6 +50,16 @@ export interface UserSettings {
   blindMode: boolean;
   quickRestartHotkey: boolean;
   keybrUnlockedLetters: string[];
+  difficulty: DifficultyMode;
+  stopOnError: StopOnErrorMode;
+  confidenceMode: ConfidenceMode;
+  minSpeed: number; // 0 for off, or threshold WPM
+  minAccuracy: number; // 0 for off, or threshold %
+  quickEnd: boolean;
+  freedomMode: boolean;
+  strictSpace: boolean;
+  liveStats: boolean;
+  language: string;
 }
 
 export interface Achievement {

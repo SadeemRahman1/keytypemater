@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield } from 'lucide-react';
+import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield, Command } from 'lucide-react';
 import { TestMode, WordCountOption, TimeLimitOption, QuoteCategory, UserSettings } from '../types';
 import { THEMES } from '../lib/themes';
 
@@ -25,6 +25,7 @@ interface HeaderProps {
   onOpenAchievements: () => void;
   onOpenSettings: () => void;
   onOpenLegal?: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -49,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAchievements,
   onOpenSettings,
   onOpenLegal,
+  onOpenCommandPalette,
 }) => {
   const theme = THEMES[settings.theme];
 
@@ -91,6 +93,17 @@ export const Header: React.FC<HeaderProps> = ({
               {unlockedAchievements}
             </span>
           </button>
+
+          {onOpenCommandPalette && (
+            <button
+              onClick={onOpenCommandPalette}
+              className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 transition-all cursor-pointer flex items-center gap-1.5"
+              title="Command Line (Ctrl + Shift + P or Esc)"
+            >
+              <Command className="w-4 h-4 text-amber-400" />
+              <span className="hidden md:inline text-xs font-mono text-slate-400">Cmd</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenSettings}
