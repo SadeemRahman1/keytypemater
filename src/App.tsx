@@ -285,41 +285,41 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 px-4 text-center text-xs text-slate-500 border-t border-slate-800/40 select-none space-y-2">
-        <div className="flex items-center justify-center gap-4 flex-wrap text-slate-400">
+      <footer className="py-4 sm:py-6 px-3 sm:px-4 text-center text-xs text-slate-500 border-t border-slate-800/40 select-none space-y-2">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap text-xs text-slate-400">
           <button
             onClick={() => openLegalModal('about')}
-            className="hover:text-amber-400 transition-colors cursor-pointer"
+            className="hover:text-amber-400 transition-colors cursor-pointer py-1 px-1.5"
           >
             About Us
           </button>
-          <span>•</span>
+          <span className="text-slate-700">•</span>
           <button
             onClick={() => openLegalModal('privacy')}
-            className="hover:text-amber-400 transition-colors cursor-pointer"
+            className="hover:text-amber-400 transition-colors cursor-pointer py-1 px-1.5"
           >
             Privacy Policy
           </button>
-          <span>•</span>
+          <span className="text-slate-700">•</span>
           <button
             onClick={() => openLegalModal('terms')}
-            className="hover:text-amber-400 transition-colors cursor-pointer"
+            className="hover:text-amber-400 transition-colors cursor-pointer py-1 px-1.5"
           >
             Terms of Service
           </button>
-          <span>•</span>
+          <span className="text-slate-700">•</span>
           <button
             onClick={() => openLegalModal('contact')}
-            className="hover:text-amber-400 transition-colors cursor-pointer"
+            className="hover:text-amber-400 transition-colors cursor-pointer py-1 px-1.5"
           >
             Contact & Support
           </button>
         </div>
 
-        <p className="flex items-center justify-center gap-1 text-[11px] text-slate-600">
+        <p className="flex items-center justify-center gap-1.5 flex-wrap text-[10px] sm:text-[11px] text-slate-600">
           <span>KeyType Master © 2026</span>
-          <span>•</span>
-          <span>Procedural Touch Typing & AI Mechanics Engine</span>
+          <span className="hidden sm:inline">•</span>
+          <span className="hidden sm:inline">Procedural Touch Typing & AI Mechanics Engine</span>
         </p>
       </footer>
 
