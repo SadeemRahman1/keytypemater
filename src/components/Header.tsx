@@ -68,11 +68,11 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="flex flex-col gap-3 sm:gap-4 w-full max-w-4xl mx-auto pt-2 sm:pt-4 px-2 sm:px-0 select-none">
+    <header className="flex flex-col gap-2.5 sm:gap-4 w-full max-w-4xl mx-auto pt-1 sm:pt-4 px-2 sm:px-4 md:px-0 select-none">
       {/* Top Navbar */}
-      <div className="flex items-center justify-between px-1 gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
         {/* Branding */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div className="p-2 sm:p-2.5 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-slate-950 shadow-lg shadow-sky-500/20 shrink-0">
             <Keyboard className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
           </div>
@@ -80,15 +80,15 @@ export const Header: React.FC<HeaderProps> = ({
             <h1 className="font-extrabold text-base sm:text-xl tracking-tight text-slate-100 flex items-center gap-1.5 sm:gap-2">
               KeyType <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-400 font-mono font-bold">MASTER</span>
             </h1>
-            <p className="text-[11px] sm:text-xs text-slate-400 hidden sm:block">Touch typing practice & key confidence analytics</p>
+            <p className="text-[11px] sm:text-xs text-slate-400 hidden md:block">Touch typing practice & key confidence analytics</p>
           </div>
         </div>
 
         {/* Action Icon Buttons */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end shrink-0">
           <button
             onClick={onOpenHistory}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer shrink-0"
             title="Analytics & History"
           >
             <BarChart2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />
@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onOpenAchievements}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer shrink-0"
             title="Achievements"
           >
             <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
@@ -110,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenLayouts && (
             <button
               onClick={onOpenLayouts}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer shrink-0"
               title="Keyboard Layouts & Efficiency Explorer"
             >
               <Keyboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
@@ -121,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenGames && (
             <button
               onClick={onOpenGames}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all text-xs font-semibold cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all text-xs font-semibold cursor-pointer shadow-sm shrink-0"
               title="Typing Arcade Games"
             >
               <Gamepad2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-pulse" />
@@ -132,17 +132,17 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenCommandPalette && (
             <button
               onClick={onOpenCommandPalette}
-              className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 transition-all cursor-pointer flex items-center gap-1.5"
+              className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
               title="Command Line (Ctrl + Shift + P or Esc)"
             >
               <Command className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-              <span className="hidden md:inline text-xs font-mono text-slate-400">Cmd</span>
+              <span className="hidden lg:inline text-xs font-mono text-slate-400">Cmd</span>
             </button>
           )}
 
           <button
             onClick={onOpenSettings}
-            className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all cursor-pointer shrink-0"
             title="Preferences"
           >
             <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
@@ -151,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenLegal && (
             <button
               onClick={onOpenLegal}
-              className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 transition-all cursor-pointer"
+              className="p-1.5 sm:p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-400 transition-all cursor-pointer shrink-0"
               title="About Us, Privacy Policy & Compliance"
             >
               <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 hover:text-amber-400" />
@@ -161,19 +161,19 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Mode Switcher Bar */}
-      <div className={`p-1.5 sm:p-2 rounded-2xl border ${theme.border} ${theme.panelBg} flex flex-col md:flex-row items-center justify-between gap-2 sm:gap-3 shadow-md`}>
+      <div className={`p-1.5 sm:p-2 rounded-2xl border ${theme.border} ${theme.panelBg} flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3 shadow-md w-full overflow-hidden`}>
         {/* Main Mode Tabs */}
-        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none">
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto w-full md:w-auto pb-1.5 md:pb-0 scrollbar-none touch-pan-x min-w-0 shrink-0">
           <button
             onClick={() => onSelectMode('keybr')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               mode === 'keybr'
                 ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <Key className="w-3.5 h-3.5" />
-            <span>Keybr Procedural</span>
+            <span>Keybr</span>
             <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-950/30">
               {unlockedCount}/26
             </span>
@@ -181,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => onSelectMode('words')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               mode === 'words'
                 ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
                 : 'text-slate-400 hover:text-slate-200'
@@ -193,7 +193,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => onSelectMode('time')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               mode === 'time'
                 ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
                 : 'text-slate-400 hover:text-slate-200'
@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => onSelectMode('quote')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               mode === 'quote'
                 ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20'
                 : 'text-slate-400 hover:text-slate-200'
@@ -217,7 +217,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onOpenAIDrill}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-500/20 to-sky-500/20 hover:from-purple-500/30 hover:to-sky-500/30 text-sky-300 border border-sky-500/30 transition-all cursor-pointer whitespace-nowrap"
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-500/20 to-sky-500/20 hover:from-purple-500/30 hover:to-sky-500/30 text-sky-300 border border-sky-500/30 transition-all cursor-pointer whitespace-nowrap shrink-0"
           >
             <Sparkles className="w-3.5 h-3.5 text-sky-400" />
             <span>AI Drill</span>
@@ -225,14 +225,14 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Sub-options for active mode */}
-        <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 text-xs text-slate-400 font-mono w-full md:w-auto pt-1 md:pt-0 border-t md:border-t-0 border-slate-800/60">
           {mode === 'words' && (
-            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800 overflow-x-auto max-w-full">
               {([10, 25, 50, 100] as WordCountOption[]).map((count) => (
                 <button
                   key={count}
                   onClick={() => onChangeWordCount(count)}
-                  className={`px-2 py-1 rounded-lg text-[11px] transition-colors cursor-pointer ${
+                  className={`px-2 py-1 rounded-lg text-[11px] transition-colors cursor-pointer shrink-0 ${
                     wordCount === count ? 'bg-slate-800 text-sky-400 font-bold' : 'hover:text-slate-200'
                   }`}
                 >
@@ -243,12 +243,12 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {mode === 'time' && (
-            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800 overflow-x-auto max-w-full">
               {timeOptions.map((time) => (
                 <button
                   key={time}
                   onClick={() => onChangeTimeLimit(time)}
-                  className={`px-2 py-1 rounded-lg text-[11px] transition-colors cursor-pointer ${
+                  className={`px-2 py-1 rounded-lg text-[11px] transition-colors cursor-pointer shrink-0 ${
                     timeLimit === time ? 'bg-slate-800 text-amber-400 font-bold shadow-sm' : 'hover:text-slate-200'
                   }`}
                 >
@@ -259,12 +259,12 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {mode === 'quote' && (
-            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800 overflow-x-auto max-w-full">
               {(['all', 'code', 'tech', 'literature'] as QuoteCategory[]).map((cat) => (
                 <button
                   key={cat}
                   onClick={() => onChangeQuoteCategory(cat)}
-                  className={`px-2 py-1 rounded-lg text-[11px] capitalize transition-colors cursor-pointer ${
+                  className={`px-2 py-1 rounded-lg text-[11px] capitalize transition-colors cursor-pointer shrink-0 ${
                     quoteCategory === cat ? 'bg-slate-800 text-purple-300 font-bold' : 'hover:text-slate-200'
                   }`}
                 >
@@ -276,7 +276,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Modifiers for Words / Time Mode */}
           {(mode === 'words' || mode === 'time') && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={onToggleNumbers}
                 className={`px-2 py-1 rounded-lg border text-[11px] transition-all cursor-pointer ${

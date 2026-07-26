@@ -41,11 +41,11 @@ function getKeyboardRowsForLayout(layout: KeyboardLayoutData): KeyConfig[][] {
       key: k,
       finger: (i <= 1 ? 'left-pinky' : i === 2 ? 'left-ring' : i === 3 ? 'left-middle' : i <= 5 ? 'left-index' : i <= 7 ? 'right-index' : i === 8 ? 'right-middle' : i === 9 ? 'right-ring' : 'right-pinky') as FingerType,
     })),
-    { key: 'Backspace', displayLabel: '⌫', finger: 'right-pinky', width: 'w-12 sm:w-16' },
+    { key: 'Backspace', displayLabel: '⌫', finger: 'right-pinky', width: 'w-10 sm:w-16' },
   ];
 
   const r2: KeyConfig[] = [
-    { key: 'Tab', displayLabel: 'Tab', finger: 'left-pinky', width: 'w-10 sm:w-14' },
+    { key: 'Tab', displayLabel: 'Tab', finger: 'left-pinky', width: 'w-8 sm:w-14' },
     ...row2Keys.map((k, i) => ({
       key: k,
       finger: getFingerForCol(i),
@@ -54,29 +54,29 @@ function getKeyboardRowsForLayout(layout: KeyboardLayoutData): KeyConfig[][] {
   ];
 
   const r3: KeyConfig[] = [
-    { key: 'CapsLock', displayLabel: 'Caps', finger: 'left-pinky', width: 'w-12 sm:w-16' },
+    { key: 'CapsLock', displayLabel: 'Caps', finger: 'left-pinky', width: 'w-10 sm:w-16' },
     ...row3Keys.map((k, i) => ({
       key: k,
       finger: getFingerForCol(i),
     })),
-    { key: 'Enter', displayLabel: '↵', finger: 'right-pinky', width: 'w-14 sm:w-20' },
+    { key: 'Enter', displayLabel: '↵', finger: 'right-pinky', width: 'w-11 sm:w-20' },
   ];
 
   const r4: KeyConfig[] = [
-    { key: 'ShiftLeft', displayLabel: 'Shift', finger: 'left-pinky', width: 'w-14 sm:w-20' },
+    { key: 'ShiftLeft', displayLabel: 'Shift', finger: 'left-pinky', width: 'w-11 sm:w-20' },
     ...row4Keys.map((k, i) => ({
       key: k,
       finger: getFingerForCol(i),
     })),
-    { key: 'ShiftRight', displayLabel: 'Shift', finger: 'right-pinky', width: 'w-14 sm:w-20' },
+    { key: 'ShiftRight', displayLabel: 'Shift', finger: 'right-pinky', width: 'w-11 sm:w-20' },
   ];
 
   const r5: KeyConfig[] = [
-    { key: 'ControlLeft', displayLabel: 'Ctrl', finger: 'left-pinky', width: 'w-10 sm:w-12' },
-    { key: 'AltLeft', displayLabel: 'Alt', finger: 'left-pinky', width: 'w-10 sm:w-12' },
-    { key: ' ', displayLabel: 'Spacebar', finger: 'thumb', width: 'w-48 sm:w-72' },
-    { key: 'AltRight', displayLabel: 'Alt', finger: 'right-pinky', width: 'w-10 sm:w-12' },
-    { key: 'ControlRight', displayLabel: 'Ctrl', finger: 'right-pinky', width: 'w-10 sm:w-12' },
+    { key: 'ControlLeft', displayLabel: 'Ctrl', finger: 'left-pinky', width: 'w-8 sm:w-12' },
+    { key: 'AltLeft', displayLabel: 'Alt', finger: 'left-pinky', width: 'w-8 sm:w-12' },
+    { key: ' ', displayLabel: 'Spacebar', finger: 'thumb', width: 'w-36 sm:w-72' },
+    { key: 'AltRight', displayLabel: 'Alt', finger: 'right-pinky', width: 'w-8 sm:w-12' },
+    { key: 'ControlRight', displayLabel: 'Ctrl', finger: 'right-pinky', width: 'w-8 sm:w-12' },
   ];
 
   return [r1, r2, r3, r4, r5];
@@ -276,9 +276,9 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({ nextChar, sett
       </div>
 
       {/* Keyboard Grid */}
-      <div className="flex flex-col gap-1.5 sm:gap-2 w-full items-center overflow-x-auto py-1">
+      <div className="flex flex-col gap-1 sm:gap-2 w-full max-w-full overflow-x-auto py-1 touch-pan-x scrollbar-none px-1">
         {keyboardRows.map((row, rIdx) => (
-          <div key={rIdx} className="flex gap-1 sm:gap-1.5 items-center justify-center">
+          <div key={rIdx} className="flex gap-0.5 sm:gap-1.5 items-center justify-center min-w-max mx-auto">
             {row.map((item, itemIdx) => {
               const keyLower = item.key.toLowerCase();
               const isPressed = activeKeys.has(keyLower);
@@ -305,7 +305,7 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({ nextChar, sett
                 ? `${fingerStyle.bg} ${fingerStyle.border} ${fingerStyle.text}`
                 : `${theme.keyBg}`;
 
-              const defaultWidth = 'w-8 h-8 sm:w-11 sm:h-11';
+              const defaultWidth = 'w-7 h-8 sm:w-11 sm:h-11';
               const widthClass = item.width || defaultWidth;
 
               return (
