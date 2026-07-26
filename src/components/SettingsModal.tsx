@@ -5,6 +5,7 @@ import { THEMES } from '../lib/themes';
 import { soundEngine } from '../lib/soundEngine';
 import { KEYBR_LETTER_ORDER } from '../lib/wordGenerator';
 import { DEFAULT_SETTINGS } from '../lib/storage';
+import { KEYBOARD_LAYOUTS } from '../lib/keyboardLayouts';
 
 interface SettingsModalProps {
   settings: UserSettings;
@@ -193,10 +194,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
           <div className="flex flex-col gap-3 border-t border-slate-800/80 pt-4">
             <div className="flex items-center gap-2 text-xs font-semibold text-slate-300 uppercase tracking-wider">
               <Keyboard className="w-4 h-4 text-purple-400" />
-              <span>Layout & Behavior Toggles</span>
+              <span>Active Keyboard Layout</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+              <label className="text-xs text-slate-300 font-medium">Select Target Keyboard Layout:</label>
+              <select
+                value={settings.activeLayout}
+                onChange={(e) => updateSetting('activeLayout', e.target.value)}
+                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-sky-400 font-mono font-bold focus:outline-none focus:border-sky-500 cursor-pointer"
+              >
+                {KEYBOARD_LAYOUTS.map((layout) => (
+                  <option key={layout.id} value={layout.id}>
+                    {layout.name} — {layout.description} ({layout.stats.homeRowPct}% Home Row)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs mt-1">
               <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
                 <div className="flex flex-col">
                   <span>Show On-Screen Keyboard</span>

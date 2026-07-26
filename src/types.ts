@@ -62,6 +62,7 @@ export interface UserSettings {
   language: string;
   showKeybrProgressWidget: boolean;
   keybrTargetWpm: number;
+  activeLayout?: string;
 }
 
 export interface Achievement {

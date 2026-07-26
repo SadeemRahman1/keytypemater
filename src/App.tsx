@@ -10,6 +10,7 @@ import { HistoryDashboard } from './components/HistoryDashboard';
 import { LegalPagesModal, LegalTab } from './components/LegalPagesModal';
 import { CommandLineModal } from './components/CommandLineModal';
 import { KeybrProgressWidget } from './components/KeybrProgressWidget';
+import { KeyboardLayoutsModal } from './components/KeyboardLayoutsModal';
 
 import {
   TestMode,
@@ -73,6 +74,7 @@ export default function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
+  const [isLayoutsOpen, setIsLayoutsOpen] = useState<boolean>(false);
   const [legalTab, setLegalTab] = useState<LegalTab>('about');
 
   const openLegalModal = (tab: LegalTab = 'about') => {
@@ -235,6 +237,7 @@ export default function App() {
         onOpenHistory={() => setIsHistoryOpen(true)}
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenLayouts={() => setIsLayoutsOpen(true)}
         onOpenLegal={() => openLegalModal('about')}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
@@ -278,6 +281,7 @@ export default function App() {
                 nextChar={nextChar}
                 settings={settings}
                 keyStats={keyStats}
+                onUpdateSettings={handleSaveSettings}
               />
             )}
           </>
@@ -332,6 +336,7 @@ export default function App() {
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenAchievements={() => setIsAchievementsOpen(true)}
+          onOpenLayouts={() => setIsLayoutsOpen(true)}
           onOpenLegal={(tab) => openLegalModal(tab)}
           onClose={() => setIsCommandPaletteOpen(false)}
         />
@@ -378,6 +383,15 @@ export default function App() {
           settings={settings}
           onClearHistory={handleClearHistory}
           onClose={() => setIsHistoryOpen(false)}
+        />
+      )}
+
+      {isLayoutsOpen && (
+        <KeyboardLayoutsModal
+          isOpen={isLayoutsOpen}
+          settings={settings}
+          onSaveSettings={handleSaveSettings}
+          onClose={() => setIsLayoutsOpen(false)}
         />
       )}
     </div>

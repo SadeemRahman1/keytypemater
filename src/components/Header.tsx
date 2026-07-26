@@ -24,6 +24,7 @@ interface HeaderProps {
   onOpenHistory: () => void;
   onOpenAchievements: () => void;
   onOpenSettings: () => void;
+  onOpenLayouts?: () => void;
   onOpenLegal?: () => void;
   onOpenCommandPalette?: () => void;
 }
@@ -49,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHistory,
   onOpenAchievements,
   onOpenSettings,
+  onOpenLayouts,
   onOpenLegal,
   onOpenCommandPalette,
 }) => {
@@ -102,6 +104,17 @@ export const Header: React.FC<HeaderProps> = ({
               {unlockedAchievements}
             </span>
           </button>
+
+          {onOpenLayouts && (
+            <button
+              onClick={onOpenLayouts}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs font-semibold cursor-pointer"
+              title="Keyboard Layouts & Efficiency Explorer"
+            >
+              <Keyboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
+              <span className="hidden sm:inline">Layouts</span>
+            </button>
+          )}
 
           {onOpenCommandPalette && (
             <button
