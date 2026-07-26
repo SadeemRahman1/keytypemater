@@ -4,6 +4,7 @@ import { UserSettings, AudioTheme, ThemeId, CaretStyle, FontFamily } from '../ty
 import { THEMES } from '../lib/themes';
 import { soundEngine } from '../lib/soundEngine';
 import { KEYBR_LETTER_ORDER } from '../lib/wordGenerator';
+import { DEFAULT_SETTINGS } from '../lib/storage';
 
 interface SettingsModalProps {
   settings: UserSettings;
@@ -460,10 +461,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
         </div>
 
         {/* Action Button */}
-        <div className="flex items-center justify-end border-t border-slate-800 pt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800 pt-4">
+          <button
+            onClick={() => {
+              onSave({ ...DEFAULT_SETTINGS });
+            }}
+            className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-500/30 font-semibold text-xs transition-all cursor-pointer"
+            title="Reset all settings to default factory values"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset to Default Settings</span>
+          </button>
+
           <button
             onClick={onClose}
-            className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all shadow cursor-pointer text-center"
           >
             Save & Close
           </button>

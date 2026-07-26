@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { RefreshCw, Zap, Target, Clock, AlertCircle } from 'lucide-react';
+import { RefreshCw, Zap, Target, Clock, AlertCircle, Pause, Play } from 'lucide-react';
 import { UserSettings, TestResult, TestMode, KeyStat } from '../types';
 import { THEMES } from '../lib/themes';
 import { soundEngine } from '../lib/soundEngine';
@@ -36,6 +36,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [errorsCount, setErrorsCount] = useState<number>(0);
   const [wpmHistory, setWpmHistory] = useState<
     Array<{ time: number; wpm: number; rawWpm: number; errors: number }>
@@ -44,6 +45,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   // Latency & character analytics collection
   const lastKeyTimeRef = useRef<number | null>(null);
   const charStatsRef = useRef<Array<{ char: string; timeMs: number; err: boolean }>>([]);
+  const pauseStartRef = useRef<number | null>(null);
 
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
@@ -100,6 +102,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     setStartTime(null);
     setElapsedSeconds(0);
     setIsCompleted(false);
+    setIsPaused(false);
     setErrorsCount(0);
     setWpmHistory([]);
     typedRef.current = '';
@@ -108,14 +111,44 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     wpmHistoryRef.current = [];
     lastKeyTimeRef.current = null;
     charStatsRef.current = [];
+    pauseStartRef.current = null;
     if (timerRef.current) clearInterval(timerRef.current);
     if (onNextCharChange) onNextCharChange(textToType.charAt(0) || null);
   }, [textToType]);
 
-  // Handle hotkeys (Restart with Esc or Shift+Tab, Tab to skip to next word)
+  const togglePause = () => {
+    if (!startTime || isCompleted) return;
+
+    if (isPaused) {
+      // Resume test
+      if (pauseStartRef.current) {
+        const pausedDuration = Date.now() - pauseStartRef.current;
+        setStartTime((prev) => (prev ? prev + pausedDuration : Date.now()));
+        pauseStartRef.current = null;
+      }
+      setIsPaused(false);
+      setTimeout(() => {
+        hiddenInputRef.current?.focus();
+      }, 50);
+    } else {
+      // Pause test
+      pauseStartRef.current = Date.now();
+      setIsPaused(true);
+    }
+  };
+
+  const togglePauseRef = useRef(togglePause);
+  togglePauseRef.current = togglePause;
+
+  // Handle hotkeys (Restart with Esc or Shift+Tab, Tab to skip to next word, Enter to pause/resume)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
+      if (e.key === 'Enter') {
+        if (startTime && !isCompleted) {
+          e.preventDefault();
+          togglePauseRef.current();
+        }
+      } else if (e.key === 'Tab') {
         e.preventDefault(); // Prevent tab focus change
 
         if (e.shiftKey) {
@@ -125,7 +158,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
         }
 
         // Tab alone skips to the start of the next word while typing!
-        if (!isCompleted && textToType) {
+        if (!isCompleted && !isPaused && textToType) {
           const currentLength = typed.length;
           let nextSpace = textToType.indexOf(' ', currentLength);
           let targetLength = 0;
@@ -188,11 +221,12 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [typed, textToType, startTime, isCompleted, mode, settings, onRestart, onNextCharChange]);
+  }, [typed, textToType, startTime, isCompleted, isPaused, mode, settings, onRestart, onNextCharChange]);
 
   const finishTest = (finalTyped: string, finalSeconds: number) => {
     if (isCompletedRef.current) return;
     setIsCompleted(true);
+    setIsPaused(false);
     isCompletedRef.current = true;
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -235,9 +269,9 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   const finishTestRef = useRef(finishTest);
   finishTestRef.current = finishTest;
 
-  // Timer interval - stays continuously active without resetting on keystrokes
+  // Timer interval - stays continuously active unless paused
   useEffect(() => {
-    if (startTime && !isCompleted) {
+    if (startTime && !isCompleted && !isPaused) {
       timerRef.current = setInterval(() => {
         const now = Date.now();
         const seconds = Math.max(1, Math.floor((now - startTime) / 1000));
@@ -277,10 +311,10 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [startTime, isCompleted]);
+  }, [startTime, isCompleted, isPaused]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isCompleted) return;
+    if (isCompleted || isPaused) return;
 
     const val = e.target.value;
     const now = Date.now();
@@ -455,8 +489,37 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       {/* Main Interactive Typing Canvas Box (5-Line Window View) */}
       <div
         className={`relative p-4 sm:p-8 rounded-2xl border ${theme.border} ${theme.panelBg} flex flex-col justify-center cursor-text transition-all duration-200 shadow-xl overflow-hidden`}
-        onClick={() => hiddenInputRef.current?.focus()}
+        onClick={() => {
+          if (isPaused) {
+            togglePause();
+          } else {
+            hiddenInputRef.current?.focus();
+          }
+        }}
       >
+        {/* Pause Overlay */}
+        {isPaused && (
+          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md z-30 flex flex-col items-center justify-center gap-3 p-4 text-center animate-fadeIn">
+            <div className="p-3 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 shadow-lg shadow-amber-500/10">
+              <Pause className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-100">Test Paused</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Press <kbd className="px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 font-mono font-bold">Enter</kbd> or click anywhere on canvas to resume</p>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePause();
+              }}
+              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-all cursor-pointer shadow-lg shadow-amber-500/20 mt-1"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>Resume Test</span>
+            </button>
+          </div>
+        )}
+
         {/* Subtle Gradient Fade Overlays for Top and Bottom Lines */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-slate-950/80 to-transparent z-10" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-slate-950/80 to-transparent z-10" />
@@ -467,7 +530,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
           type="text"
           value={typed}
           onChange={handleInputChange}
-          disabled={isCompleted}
+          disabled={isCompleted || isPaused}
           className="absolute inset-0 opacity-0 cursor-default pointer-events-auto"
           autoFocus
           autoCapitalize="none"
@@ -500,7 +563,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
                 className="relative inline-block"
               >
                 {/* Caret Line Indicator */}
-                {isCurrent && !isCompleted && (
+                {isCurrent && !isCompleted && !isPaused && (
                   <span className={`absolute -left-0.5 top-1 ${caretClass} z-10`} />
                 )}
                 <span className={charColor}>{char}</span>
@@ -513,6 +576,9 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       {/* Control Actions & Hotkey Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 px-2">
         <div className="hidden sm:flex items-center gap-2">
+          <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono text-[11px]">Enter</span>
+          <span>pause / resume</span>
+          <span>•</span>
           <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono text-[11px]">Tab</span>
           <span>skip word</span>
           <span>•</span>
@@ -520,13 +586,35 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
           <span>restart</span>
         </div>
 
-        <button
-          onClick={onRestart}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-medium cursor-pointer ml-auto sm:ml-0"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>Restart Test</span>
-        </button>
+        <div className="flex items-center gap-2 ml-auto sm:ml-0">
+          {startTime && !isCompleted && (
+            <button
+              onClick={togglePause}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 transition-all text-xs font-semibold cursor-pointer border border-amber-500/30"
+              title={isPaused ? "Resume Test" : "Pause Test"}
+            >
+              {isPaused ? (
+                <>
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Resume</span>
+                </>
+              ) : (
+                <>
+                  <Pause className="w-3.5 h-3.5" />
+                  <span>Pause</span>
+                </>
+              )}
+            </button>
+          )}
+
+          <button
+            onClick={onRestart}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-medium cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Restart Test</span>
+          </button>
+        </div>
       </div>
     </div>
   );
