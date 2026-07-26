@@ -11,6 +11,7 @@ import { LegalPagesModal, LegalTab } from './components/LegalPagesModal';
 import { CommandLineModal } from './components/CommandLineModal';
 import { KeybrProgressWidget } from './components/KeybrProgressWidget';
 import { KeyboardLayoutsModal } from './components/KeyboardLayoutsModal';
+import { TypingGamesModal } from './components/TypingGamesModal';
 
 import {
   TestMode,
@@ -75,6 +76,7 @@ export default function App() {
   const [isLegalOpen, setIsLegalOpen] = useState<boolean>(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isLayoutsOpen, setIsLayoutsOpen] = useState<boolean>(false);
+  const [isGamesOpen, setIsGamesOpen] = useState<boolean>(false);
   const [legalTab, setLegalTab] = useState<LegalTab>('about');
 
   const openLegalModal = (tab: LegalTab = 'about') => {
@@ -238,6 +240,7 @@ export default function App() {
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenLayouts={() => setIsLayoutsOpen(true)}
+        onOpenGames={() => setIsGamesOpen(true)}
         onOpenLegal={() => openLegalModal('about')}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
@@ -337,6 +340,7 @@ export default function App() {
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenAchievements={() => setIsAchievementsOpen(true)}
           onOpenLayouts={() => setIsLayoutsOpen(true)}
+          onOpenGames={() => setIsGamesOpen(true)}
           onOpenLegal={(tab) => openLegalModal(tab)}
           onClose={() => setIsCommandPaletteOpen(false)}
         />
@@ -392,6 +396,14 @@ export default function App() {
           settings={settings}
           onSaveSettings={handleSaveSettings}
           onClose={() => setIsLayoutsOpen(false)}
+        />
+      )}
+
+      {isGamesOpen && (
+        <TypingGamesModal
+          isOpen={isGamesOpen}
+          settings={settings}
+          onClose={() => setIsGamesOpen(false)}
         />
       )}
     </div>

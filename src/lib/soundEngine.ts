@@ -223,6 +223,76 @@ class SoundEngine {
       // Fallback
     }
   }
+
+  public playGameLaser(volume: number = 0.4) {
+    if (volume <= 0) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.1);
+
+      gain.gain.setValueAtTime(0.3 * volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
+    } catch (e) {}
+  }
+
+  public playGameExplosion(volume: number = 0.5) {
+    if (volume <= 0) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+
+      // Low pitch boom sine
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.exponentialRampToValueAtTime(30, now + 0.25);
+
+      gain.gain.setValueAtTime(0.4 * volume, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } catch (e) {}
+  }
+
+  public playGamePowerup(volume: number = 0.5) {
+    if (volume <= 0) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteTime = now + idx * 0.05;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, noteTime);
+        gain.gain.setValueAtTime(0.2 * volume, noteTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.15);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(noteTime);
+        osc.stop(noteTime + 0.15);
+      });
+    } catch (e) {}
+  }
 }
 
 export const soundEngine = new SoundEngine();

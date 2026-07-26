@@ -20,6 +20,7 @@ interface CommandLineModalProps {
   onOpenHistory: () => void;
   onOpenAchievements: () => void;
   onOpenLayouts?: () => void;
+  onOpenGames?: () => void;
   onOpenLegal: (tab: 'about' | 'privacy' | 'terms' | 'contact') => void;
   onClose: () => void;
 }
@@ -32,6 +33,7 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
   onOpenHistory,
   onOpenAchievements,
   onOpenLayouts,
+  onOpenGames,
   onOpenLegal,
   onClose,
 }) => {
@@ -82,6 +84,7 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
     { id: 'keybr-target-50', category: 'setting', title: 'Keybr Target Speed: 50 WPM (Fast)', subtitle: 'Unlock next letter above 50 WPM', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onUpdateSettings({ ...settings, keybrTargetWpm: 50 }); onClose(); } },
 
     // Navigations
+    { id: 'nav-games', category: 'navigation', title: 'Open Typing Arcade Games', subtitle: 'Play Meteor Defense, Nitro Racer & Balloon Burst', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { if (onOpenGames) onOpenGames(); onClose(); } },
     { id: 'nav-layouts', category: 'navigation', title: 'Open Keyboard Layouts & Efficiency', subtitle: 'Analyze QWERTY, Dvorak, Colemak, Workman & custom layouts', icon: <Command className="w-4 h-4 text-purple-400" />, action: () => { if (onOpenLayouts) onOpenLayouts(); onClose(); } },
     { id: 'nav-settings', category: 'navigation', title: 'Open All Preferences', subtitle: 'Configure all typing options', icon: <Settings className="w-4 h-4 text-slate-400" />, action: () => { onOpenSettings(); onClose(); } },
     { id: 'nav-history', category: 'navigation', title: 'Open Performance History', subtitle: 'View past tests & graphs', icon: <BarChart2 className="w-4 h-4 text-slate-400" />, action: () => { onOpenHistory(); onClose(); } },

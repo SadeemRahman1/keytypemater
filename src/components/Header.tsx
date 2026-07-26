@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield, Command } from 'lucide-react';
+import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield, Command, Gamepad2 } from 'lucide-react';
 import { TestMode, WordCountOption, TimeLimitOption, QuoteCategory, UserSettings } from '../types';
 import { THEMES } from '../lib/themes';
 
@@ -25,6 +25,7 @@ interface HeaderProps {
   onOpenAchievements: () => void;
   onOpenSettings: () => void;
   onOpenLayouts?: () => void;
+  onOpenGames?: () => void;
   onOpenLegal?: () => void;
   onOpenCommandPalette?: () => void;
 }
@@ -51,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAchievements,
   onOpenSettings,
   onOpenLayouts,
+  onOpenGames,
   onOpenLegal,
   onOpenCommandPalette,
 }) => {
@@ -113,6 +115,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Keyboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
               <span className="hidden sm:inline">Layouts</span>
+            </button>
+          )}
+
+          {onOpenGames && (
+            <button
+              onClick={onOpenGames}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all text-xs font-semibold cursor-pointer shadow-sm"
+              title="Typing Arcade Games"
+            >
+              <Gamepad2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-pulse" />
+              <span className="hidden sm:inline font-bold">Games</span>
             </button>
           )}
 
