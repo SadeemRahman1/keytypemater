@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Code, BookOpen, Stethoscope, Briefcase, Zap, X, Check } from 'lucide-react';
 import { UserSettings, KeyStat } from '../types';
 import { THEMES } from '../lib/themes';
+import { getOfflineAIDrill } from '../data/aiDrillsData';
 
 interface AIDrillGeneratorProps {
   settings: UserSettings;
@@ -46,32 +47,26 @@ export const AIDrillGenerator: React.FC<AIDrillGeneratorProps> = ({
     );
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     setIsLoading(true);
     setErrorMsg(null);
 
     try {
-      const response = await fetch('/api/gemini/generate-drill', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          targetKeys: selectedKeys,
-          topic: selectedTopic,
-          difficulty,
-          wordCount,
-        }),
+      const drill = getOfflineAIDrill({
+        targetKeys: selectedKeys,
+        topic: selectedTopic,
+        difficulty,
+        wordCount,
       });
 
-      const data = await response.json();
-      if (data.success && data.text) {
-        const topicName = TOPIC_PRESETS.find((t) => t.id === selectedTopic)?.name || 'Custom AI Drill';
-        onGenerated(data.text, `AI Drill: ${topicName}`);
+      if (drill && drill.text) {
+        onGenerated(drill.text, drill.title);
         onClose();
       } else {
-        setErrorMsg(data.error || 'Failed to generate drill. Please try again.');
+        setErrorMsg('Failed to generate drill. Please try again.');
       }
     } catch (err: any) {
-      setErrorMsg('Failed to connect to AI server. Please check connection.');
+      setErrorMsg('Failed to generate drill locally.');
     } finally {
       setIsLoading(false);
     }
