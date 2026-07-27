@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield, Command, Gamepad2 } from 'lucide-react';
+import { Keyboard, Sparkles, BarChart2, Trophy, Settings, Zap, Clock, Key, Quote, Shield, Command, Gamepad2, BookOpen } from 'lucide-react';
 import { TestMode, WordCountOption, TimeLimitOption, QuoteCategory, UserSettings } from '../types';
 import { THEMES } from '../lib/themes';
 
@@ -28,6 +28,7 @@ interface HeaderProps {
   onOpenGames?: () => void;
   onOpenLegal?: () => void;
   onOpenCommandPalette?: () => void;
+  onOpenBlog?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -55,6 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenGames,
   onOpenLegal,
   onOpenCommandPalette,
+  onOpenBlog,
 }) => {
   const theme = THEMES[settings.theme];
 
@@ -126,6 +128,17 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Gamepad2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 animate-pulse" />
               <span className="hidden sm:inline font-bold">Games</span>
+            </button>
+          )}
+
+          {onOpenBlog && (
+            <button
+              onClick={onOpenBlog}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-300 transition-all text-xs font-semibold cursor-pointer shadow-sm shrink-0"
+              title="Touch Typing Articles & Guides"
+            >
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-400" />
+              <span className="hidden sm:inline font-bold">Blog</span>
             </button>
           )}
 
