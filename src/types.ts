@@ -63,6 +63,8 @@ export interface UserSettings {
   showKeybrProgressWidget: boolean;
   keybrTargetWpm: number;
   activeLayout?: string;
+  maxOneMistake: boolean;
+  preventWordRewrite: boolean;
 }
 
 export interface Achievement {

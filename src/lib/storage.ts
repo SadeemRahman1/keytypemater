@@ -32,6 +32,8 @@ export const DEFAULT_SETTINGS: UserSettings = {
   showKeybrProgressWidget: false,
   keybrTargetWpm: 35,
   activeLayout: 'qwerty_us',
+  maxOneMistake: false,
+  preventWordRewrite: false,
 };
 
 export const INITIAL_ACHIEVEMENTS: Achievement[] = [

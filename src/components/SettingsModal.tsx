@@ -337,6 +337,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ settings, onSave, 
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
+                <div className="flex flex-col pr-2">
+                  <span className="font-semibold text-slate-200">Max 1 Mistake Lock</span>
+                  <span className="text-[10px] text-slate-400">Block typing 2nd consecutive error key</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.maxOneMistake}
+                  onChange={(e) => updateSetting('maxOneMistake', e.target.checked)}
+                  className="accent-sky-400 w-4 h-4 rounded cursor-pointer shrink-0"
+                />
+              </label>
+
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-slate-800 cursor-pointer">
+                <div className="flex flex-col pr-2">
+                  <span className="font-semibold text-slate-200">Lock Completed Words</span>
+                  <span className="text-[10px] text-slate-400">No backspacing into finished words / clear all</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.preventWordRewrite}
+                  onChange={(e) => updateSetting('preventWordRewrite', e.target.checked)}
+                  className="accent-sky-400 w-4 h-4 rounded cursor-pointer shrink-0"
+                />
+              </label>
+
               <div className="flex flex-col gap-1.5">
                 <label className="text-slate-400">Minimum WPM Threshold:</label>
                 <select

@@ -319,17 +319,25 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     const val = e.target.value;
     const now = Date.now();
 
-    // 1. Confidence Mode Enforcement
+    // 0. Prevent clearing all text or selecting & deleting multiple characters at once
+    if ((settings.preventWordRewrite || settings.confidenceMode !== 'off') && val.length < typed.length - 1 && typed.length > 1) {
+      soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
+      return;
+    }
+
+    // 1. Confidence & Completed Word Protection
     const isBackspace = val.length < typed.length;
     if (isBackspace) {
       if (settings.confidenceMode === 'max') {
         // Max confidence mode: Backspace is completely disabled
+        soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
         return;
       }
-      if (settings.confidenceMode === 'on') {
-        // Cannot backspace into previous word if space was typed
+      if (settings.preventWordRewrite || settings.confidenceMode === 'on') {
+        // Cannot backspace into previous word if space was typed (lock completed words)
         const lastSpaceIndexInText = textToType.lastIndexOf(' ', typed.length - 1);
-        if (val.length <= lastSpaceIndexInText && lastSpaceIndexInText !== -1) {
+        if (lastSpaceIndexInText !== -1 && val.length <= lastSpaceIndexInText) {
+          soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
           return;
         }
       }
@@ -344,6 +352,20 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     const lastCharTyped = val.slice(-1);
     const expectedChar = textToType[val.length - 1];
     const isError = !isBackspace && lastCharTyped !== expectedChar;
+
+    // 2. Max 1 Mistake Lock (Consecutive Wrong Letter Rule)
+    if (!isBackspace && settings.maxOneMistake) {
+      const prevCharIndex = typed.length - 1;
+      const wasPrevCharError = prevCharIndex >= 0 && typed[prevCharIndex] !== textToType[prevCharIndex];
+
+      if (wasPrevCharError && isError) {
+        // User's previous character was incorrect, and current character is ALSO incorrect!
+        // Block consecutive wrong letters and play error sound.
+        soundEngine.playKeySound(settings.soundTheme, settings.soundVolume, false, true);
+        setErrorsCount((prev) => prev + 1);
+        return; // Block typing 2nd consecutive mistake
+      }
+    }
 
     // 2. Stop on Error Rules
     if (isError && settings.stopOnError === 'letter') {
