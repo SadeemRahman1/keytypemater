@@ -12,7 +12,6 @@ import { CommandLineModal } from './components/CommandLineModal';
 import { KeybrProgressWidget } from './components/KeybrProgressWidget';
 import { KeyboardLayoutsModal } from './components/KeyboardLayoutsModal';
 import { TypingGamesModal } from './components/TypingGamesModal';
-import { BlogModal } from './components/BlogModal';
 
 import {
   TestMode,
@@ -78,7 +77,6 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState<boolean>(false);
   const [isLayoutsOpen, setIsLayoutsOpen] = useState<boolean>(false);
   const [isGamesOpen, setIsGamesOpen] = useState<boolean>(false);
-  const [isBlogOpen, setIsBlogOpen] = useState<boolean>(false);
   const [legalTab, setLegalTab] = useState<LegalTab>('about');
 
   const openLegalModal = (tab: LegalTab = 'about') => {
@@ -243,7 +241,6 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenLayouts={() => setIsLayoutsOpen(true)}
         onOpenGames={() => setIsGamesOpen(true)}
-        onOpenBlog={() => setIsBlogOpen(true)}
         onOpenLegal={() => openLegalModal('about')}
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
@@ -305,13 +302,6 @@ export default function App() {
           </button>
           <span className="text-slate-700">•</span>
           <button
-            onClick={() => setIsBlogOpen(true)}
-            className="hover:text-sky-400 transition-colors cursor-pointer py-1 px-1.5 font-bold text-sky-400/90"
-          >
-            Blog & Guides
-          </button>
-          <span className="text-slate-700">•</span>
-          <button
             onClick={() => openLegalModal('privacy')}
             className="hover:text-amber-400 transition-colors cursor-pointer py-1 px-1.5"
           >
@@ -351,7 +341,6 @@ export default function App() {
           onOpenAchievements={() => setIsAchievementsOpen(true)}
           onOpenLayouts={() => setIsLayoutsOpen(true)}
           onOpenGames={() => setIsGamesOpen(true)}
-          onOpenBlog={() => setIsBlogOpen(true)}
           onOpenLegal={(tab) => openLegalModal(tab)}
           onClose={() => setIsCommandPaletteOpen(false)}
         />
@@ -415,15 +404,6 @@ export default function App() {
           isOpen={isGamesOpen}
           settings={settings}
           onClose={() => setIsGamesOpen(false)}
-        />
-      )}
-
-      {isBlogOpen && (
-        <BlogModal
-          isOpen={isBlogOpen}
-          settings={settings}
-          onClose={() => setIsBlogOpen(false)}
-          onSelectPracticeMode={(m) => setMode(m)}
         />
       )}
     </div>

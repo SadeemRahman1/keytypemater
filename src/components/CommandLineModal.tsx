@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Command, X, Palette, Volume2, Type, Eye, Shield, Trophy, Settings, BarChart2, BookOpen } from 'lucide-react';
+import { Search, Command, X, Palette, Volume2, Type, Eye, Shield, Trophy, Settings, BarChart2 } from 'lucide-react';
 import { UserSettings, ThemeId, AudioTheme, TestMode } from '../types';
 import { THEMES } from '../lib/themes';
 
@@ -21,7 +21,6 @@ interface CommandLineModalProps {
   onOpenAchievements: () => void;
   onOpenLayouts?: () => void;
   onOpenGames?: () => void;
-  onOpenBlog?: () => void;
   onOpenLegal: (tab: 'about' | 'privacy' | 'terms' | 'contact') => void;
   onClose: () => void;
 }
@@ -35,7 +34,6 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
   onOpenAchievements,
   onOpenLayouts,
   onOpenGames,
-  onOpenBlog,
   onOpenLegal,
   onClose,
 }) => {
@@ -86,7 +84,6 @@ export const CommandLineModal: React.FC<CommandLineModalProps> = ({
     { id: 'keybr-target-50', category: 'setting', title: 'Keybr Target Speed: 50 WPM (Fast)', subtitle: 'Unlock next letter above 50 WPM', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { onUpdateSettings({ ...settings, keybrTargetWpm: 50 }); onClose(); } },
 
     // Navigations
-    { id: 'nav-blog', category: 'navigation', title: 'Open Blog & Touch Typing Articles', subtitle: 'How to improve typing speed, 10 Finger guide, NTS & PPSC guides', icon: <BookOpen className="w-4 h-4 text-sky-400" />, action: () => { if (onOpenBlog) onOpenBlog(); onClose(); } },
     { id: 'nav-games', category: 'navigation', title: 'Open Typing Arcade Games', subtitle: 'Play Meteor Defense, Nitro Racer & Balloon Burst', icon: <Command className="w-4 h-4 text-amber-400" />, action: () => { if (onOpenGames) onOpenGames(); onClose(); } },
     { id: 'nav-layouts', category: 'navigation', title: 'Open Keyboard Layouts & Efficiency', subtitle: 'Analyze QWERTY, Dvorak, Colemak, Workman & custom layouts', icon: <Command className="w-4 h-4 text-purple-400" />, action: () => { if (onOpenLayouts) onOpenLayouts(); onClose(); } },
     { id: 'nav-settings', category: 'navigation', title: 'Open All Preferences', subtitle: 'Configure all typing options', icon: <Settings className="w-4 h-4 text-slate-400" />, action: () => { onOpenSettings(); onClose(); } },
